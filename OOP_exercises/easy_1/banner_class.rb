@@ -1,5 +1,13 @@
 class Banner
-  def initialize(message)
+  def initialize(message, banner_width=message.size + 2)
+    @message = message
+    if banner_width < message.size
+      @banner_width = message.size + 2
+    elsif (banner_width - message.size).odd?
+      @banner_width = banner_width + 1
+    else
+      @banner_width = banner_width
+    end
   end
 
   def to_s
@@ -8,34 +16,39 @@ class Banner
 
   private
 
+  def buffer_length
+    (@banner_width - @message.size)/2
+  end
+
   def horizontal_rule
+    "+" + "-" * @banner_width + "+"
   end
 
   def empty_line
+    '|' + ' ' * @banner_width + '|'
   end
 
   def message_line
-    "| #{@message} |"
+    "|" + " " * buffer_length + "#{@message}" + " " * buffer_length + "|"
   end
 end
 
 
-=begin test cases
-
-banner = Banner.new('To boldly go where no one has gone before.')
+banner = Banner.new('To boldly go where no one has gone before.', 50)
 puts banner
+=begin
 +--------------------------------------------+
 |                                            |
 | To boldly go where no one has gone before. |
 |                                            |
 +--------------------------------------------+
-
-banner = Banner.new('')
+=end
+banner = Banner.new('', 6)
 puts banner
+=begin
 +--+
 |  |
 |  |
 |  |
 +--+
-
 =end
